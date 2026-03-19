@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body { margin: 0; padding: 0; overflow: hidden; background: transparent; font-family: 'Montserrat', sans-serif; }
+        
+        #chat-container {
+            position: absolute; top: 20px; left: 20px;
+            width: 500px; height: 300px;
+            display: flex; flex-direction: column;
+            justify-content: flex-end;
+            pointer-events: none;
+        }
+
+        .chat-msg {
+            background: linear-gradient(90deg, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0) 100%);
+            padding: 5px 15px;
+            margin-bottom: 4px;
+            border-left: 3px solid #f1c40f; /* Honex ყვითელი ხაზი */
+            color: #fff;
+            font-size: 14px;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.8);
+            animation: slideIn 0.3s ease-out;
+            max-width: fit-content;
+            word-wrap: break-word;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container"></div>
+
+    <script>
+        if (typeof cef !== 'undefined') {
+            // SAMP-ის სტანდარტული ჩატის გათიშვა
+            cef.emit("game:chat:setBoxVisible", false);
+
+            // ივენთის მოსმენა სერვერიდან
+            cef.on("addChatMessage", (text) => {
+                const container = document.getElementById('chat-container');
+                const msg = document.createElement('div');
+                msg.className = 'chat-msg';
+                msg.innerHTML = text; // საშუალებას გვაძლევს გამოვიყენოთ ფერები {FFFFFF}
+                
+                container.appendChild(msg);
+
+                // ბოლო 12 მესიჯის დატოვება
+                if (container.childNodes.length > 12) {
+                    container.removeChild(container.firstChild);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
