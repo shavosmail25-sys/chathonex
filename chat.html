@@ -57,6 +57,55 @@
             });
         }
     </script>
+    <script>
+    function addChatMessage(text) {
+        const container = document.getElementById('chat-container');
+        const msg = document.createElement('div');
+        msg.className = 'chat-msg';
+        msg.innerHTML = text;
+        container.appendChild(msg);
+        if (container.childNodes.length > 12) {
+            container.removeChild(container.firstChild);
+        }
+    }
+
+    if (typeof cef !== 'undefined') {
+        cef.emit("game:chat:setBoxVisible", false);
+        cef.on("addChatMessage", (text) => {
+            addChatMessage(text);
+        });
+    } else {
+        // ეს გამოჩნდება მხოლოდ ჩვეულებრივ ბრაუზერში (ტესტისთვის)
+        setTimeout(() => {
+            addChatMessage("{F1C40F}Honex RP: {FFFFFF}ბრაუზერის ტესტი მუშაობს!");
+            addChatMessage("Lasha_Gamer: სატესტო მესიჯი");
+        }, 1000);
+    }
+<script>
+    function addChatMessage(text) {
+        const container = document.getElementById('chat-container');
+        const msg = document.createElement('div');
+        msg.className = 'chat-msg';
+        msg.innerHTML = text;
+        container.appendChild(msg);
+        if (container.childNodes.length > 12) {
+            container.removeChild(container.firstChild);
+        }
+    }
+
+    if (typeof cef !== 'undefined') {
+        cef.emit("game:chat:setBoxVisible", false);
+        cef.on("addChatMessage", (text) => {
+            addChatMessage(text);
+        });
+    } else {
+        // ეს გამოჩნდება მხოლოდ ჩვეულებრივ ბრაუზერში (ტესტისთვის)
+        setTimeout(() => {
+            addChatMessage("{F1C40F}Honex RP: {FFFFFF}ბრაუზერის ტესტი მუშაობს!");
+            addChatMessage("Lasha_Gamer: სატესტო მესიჯი");
+        }, 1000);
+    }
+</script>
 </body>
     <div style="color: red; background: white; position: absolute; top: 100px; left: 100px; z-index: 9999;">
     ჩატის ფაილი ჩაიტვირთა!
