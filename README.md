@@ -2,119 +2,166 @@
 <html lang="ka">
 <head>
     <meta charset="UTF-8">
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;700&family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+    <title>Login - HONEX RP</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        body { margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: transparent; }
-        
-        #register-box {
-            background: rgba(10, 10, 10, 0.95); border-top: 3px solid #f1c40f; border-bottom: 3px solid #f1c40f;
-            padding: 40px; width: 400px; transform: skewX(-5deg); box-shadow: 0 0 30px rgba(0,0,0,0.8);
+        html, body {
+            margin: 0; padding: 0; background: transparent; overflow: hidden;
+            width: 100%; height: 100%; font-family: 'Rajdhani', sans-serif; color: white;
+        }
+
+        :root {
+            --main-gold: #ffcc00;
+            --glow-gold: rgba(255, 204, 0, 0.7);
+            --bg-color: rgba(15, 15, 18, 0.85);
+            --border-color: rgba(255, 204, 0, 0.3);
+            --error-color: #f44336;
+        }
+
+        /* ბნელი ფონი მთელ ეკრანზე */
+        #login-overlay {
             display: none; 
+            position: absolute; top: 0; left: 0; 
+            width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.75); 
+            backdrop-filter: blur(8px); 
+            z-index: 10000;
         }
 
-        .content { transform: skewX(5deg); }
+        /* --- ლოგინის პანელი (აბსოლუტური ცენტრი და დაპატარავებული ზომა) --- */
+        #login-panel {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            /* translate(-50%, -50%) სვამს ზუსტად შუაში ყველა ეკრანზე */
+            transform: translate(-50%, -50%); 
+            
+            width: 280px; /* იყო 380px, საგრძნობლად დაპატარავდა */
+            padding: 25px; /* იყო 40px */
+            
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.7);
+            
+            display: flex; flex-direction: column; gap: 15px; /* დაშორებები შემცირდა */
+            text-align: center;
+            border-top: 4px solid var(--main-gold);
+            
+            animation: fadeInCenter 0.5s ease-out forwards;
+            opacity: 0;
+        }
+
+        .logo-forge {
+            font-family: 'Orbitron', sans-serif; font-size: 24px; font-weight: 900; 
+            color: var(--main-gold); text-shadow: 0 0 10px var(--glow-gold); 
+            font-style: italic; margin: 0;
+        }
+
+        .welcome-text { font-size: 13px; color: #bdc3c7; margin: 0; margin-top: 3px; }
+
+        .username-container {
+            font-size: 18px; font-weight: 800; color: white;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px; border-radius: 5px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .input-wrapper { text-align: left; }
+        .input-wrapper label { font-size: 12px; color: var(--main-gold); font-weight: 700; margin-bottom: 5px; display: inline-block; }
         
-        .logo { text-align: center; margin-bottom: 30px; }
-        .logo h1 { margin: 0; font-size: 32px; font-weight: 900; background: linear-gradient(180deg, #f1c40f 0%, #d35400 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .logo span { color: #fff; font-family: 'Oswald', sans-serif; font-size: 14px; letter-spacing: 2px; }
-
-        .input-group { margin-bottom: 20px; position: relative; }
-        .input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #f1c40f; font-size: 18px; }
-        .input-group input { 
-            width: 100%; padding: 12px 15px 12px 45px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); 
-            color: #fff; font-family: 'Montserrat', sans-serif; font-size: 14px; box-sizing: border-box; outline: none; transition: 0.3s;
+        .password-field {
+            width: 100%; box-sizing: border-box; padding: 10px;
+            background: rgba(0,0,0,0.6); border: 1px solid var(--border-color);
+            color: white; border-radius: 4px; outline: none;
+            font-family: 'Rajdhani', sans-serif; font-size: 15px; font-weight: bold; text-align: center;
+            transition: border-color 0.3s, box-shadow 0.3s;
         }
-        .input-group input:focus { border-color: #f1c40f; background: rgba(255, 255, 255, 0.1); }
-
-        .gender-select { display: flex; gap: 10px; margin-bottom: 25px; }
-        .gender-btn { 
-            flex: 1; padding: 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); 
-            color: #fff; cursor: pointer; transition: 0.3s; font-weight: bold; font-family: 'Oswald';
-        }
-        .gender-btn.active { background: #f1c40f; color: #000; border-color: #f1c40f; }
-
-        .submit-btn {
-            width: 100%; padding: 12px; background: linear-gradient(90deg, #f1c40f, #d35400); border: none;
-            color: #fff; font-family: 'Oswald', sans-serif; font-size: 18px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: transform 0.2s;
-        }
-        .submit-btn:hover { transform: scale(1.02); }
         
-        .error-msg { color: #e74c3c; font-size: 12px; text-align: center; margin-top: 15px; min-height: 15px; font-weight: bold; }
+        .password-field:focus { border-color: var(--main-gold); box-shadow: 0 0 8px var(--glow-gold); }
+
+        .error-message { font-size: 13px; color: var(--error-color); font-weight: 700; min-height: 15px; }
+        .attempts-counter { font-size: 13px; color: #fff; opacity: 0.8; }
+
+        .login-btn {
+            background: linear-gradient(90deg, #b38f00, #ffcc00);
+            border: none; padding: 12px;
+            color: black; font-weight: 900;
+            font-family: 'Montserrat', sans-serif; font-size: 15px;
+            border-radius: 4px; cursor: pointer; text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(255, 204, 0, 0.3);
+            transition: transform 0.2s, background 0.3s;
+        }
+        
+        .login-btn:hover { background: linear-gradient(90deg, #d4af37, #ffcc00); transform: translateY(-1px); }
+        .login-btn:active { transform: translateY(1px); }
+
+        /* ახალი ანიმაცია, რომელიც ცენტრშივე ამოდის */
+        @keyframes fadeInCenter {
+            0% { opacity: 0; transform: translate(-50%, -45%); }
+            100% { opacity: 1; transform: translate(-50%, -50%); }
+        }
+
     </style>
 </head>
 <body>
 
-<div id="register-box">
-    <div class="content">
-        <div class="logo">
-            <h1>HONEX RP</h1>
-            <span>ახალი ანგარიშის შექმნა</span>
+    <div id="login-overlay">
+        <div id="login-panel">
+            <div>
+                <h1 class="logo-forge">HONEX RP</h1>
+                <p class="welcome-text">მოგესალმებით სერვერზე!</p>
+            </div>
+            
+            <div class="username-container" id="login-username">Player_Name</div>
+            
+            <div class="input-wrapper">
+                <label><i class="fas fa-lock"></i> შეიყვანეთ პაროლი</label>
+                <input type="password" id="login-password" class="password-field" placeholder="••••••••">
+            </div>
+            
+            <div class="error-message" id="login-error"></div>
+            <div class="attempts-counter" id="login-attempts">დარჩენილია 4 ცდა</div>
+            
+            <button onclick="submitLogin()" class="login-btn">ავტორიზაცია <i class="fas fa-sign-in-alt"></i></button>
         </div>
-
-        <div class="input-group">
-            <i class="fas fa-lock"></i>
-            <input type="password" id="reg-pass" placeholder="მოიფიქრეთ პაროლი">
-        </div>
-        <div class="input-group">
-            <i class="fas fa-envelope"></i>
-            <input type="email" id="reg-mail" placeholder="თქვენი ელ-ფოსტა">
-        </div>
-        
-        <div class="gender-select">
-            <button class="gender-btn active" id="btn-male" onclick="selectGender(1)"><i class="fas fa-male"></i> კაცი</button>
-            <button class="gender-btn" id="btn-female" onclick="selectGender(2)"><i class="fas fa-female"></i> ქალი</button>
-        </div>
-        
-        <button class="submit-btn" onclick="sendRegisterData()">რეგისტრაცია</button>
-        <div class="error-msg" id="error-box"></div>
     </div>
-</div>
 
-<script>
-    let selectedGender = 1;
+    <script>
+        function submitLogin() {
+            const pass = document.getElementById("login-password").value;
+            const errorField = document.getElementById("login-error");
 
-    if (typeof cef !== 'undefined') {
-        cef.on("showRegisterWindow", () => {
-            document.getElementById('register-box').style.display = 'block';
-            cef.emit("game:hud:setComponentVisible", 0, false); 
-        });
-        
-        cef.on("hideRegisterWindow", () => {
-            document.getElementById('register-box').style.display = 'none';
-        });
-    } else {
-        document.getElementById('register-box').style.display = 'block';
-    }
+            if(pass.length < 1) {
+                errorField.innerText = "შეიყვანეთ პაროლი!";
+                return;
+            }
 
-    function selectGender(gender) {
-        selectedGender = gender;
-        document.getElementById('btn-male').classList.remove('active');
-        document.getElementById('btn-female').classList.remove('active');
-        if(gender === 1) document.getElementById('btn-male').classList.add('active');
-        else document.getElementById('btn-female').classList.add('active');
-    }
-
-    function sendRegisterData() {
-        let pass = document.getElementById('reg-pass').value;
-        let mail = document.getElementById('reg-mail').value;
-        let errorBox = document.getElementById('error-box');
-        
-        if(pass.length < 4 || pass.length > 30) { 
-            errorBox.innerText = "პაროლი უნდა შეიცავდეს 4-დან 30-მდე სიმბოლოს!"; 
-            return; 
+            if (typeof cef !== 'undefined') {
+                cef.emit("server:verifyLogin", pass);
+                errorField.innerText = ""; 
+            }
         }
-        if(!mail.includes('@') || !mail.includes('.')) { 
-            errorBox.innerText = "მიუთითეთ სწორი ელ-ფოსტა!"; 
-            return; 
-        }
-        
-        errorBox.innerText = "ველოდებით სერვერის პასუხს...";
-        
+
+        document.getElementById("login-password").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                submitLogin();
+            }
+        });
+
         if (typeof cef !== 'undefined') {
-            cef.emit("cef_server_onRegisterInput", pass, mail, selectedGender);
+            cef.on("showLoginPanel", function(playerName, attempts) {
+                document.getElementById("login-overlay").style.display = "block"; // flex-ის მაგივრად block, რადგან absolute-ით ვსვამთ შუაში
+                document.getElementById("login-username").innerText = playerName;
+                document.getElementById("login-attempts").innerText = "დარჩენილია " + attempts + " ცდა";
+                
+                setTimeout(() => { document.getElementById("login-password").focus(); }, 100);
+            });
         }
-    }
-</script>
+    </script>
 </body>
 </html>
